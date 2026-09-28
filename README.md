@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="AdaptaPE.png" alt="Logo de Adapta PE" width="250">
+  <img src="AdaptaPELite.png" alt="Logo de Adapta PE" width="250">
 </p>
 
 # 🇵🇪 Adapta PE — Sistema Operativo de Accesibilidad Universal Hands-Free
