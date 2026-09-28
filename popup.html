@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;800;900&display=swap');
+    :root { --rojo: #E30613; --bg: #e4e8ec; --card: #ffffff; --text: #2d3436; --muted: #b2bec3; }
+    body { width: 360px; padding: 15px; font-family: 'Nunito', sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+    .container { background: var(--card); border-radius: 24px; padding: 25px; box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
+    .header { display: flex; align-items: center; justify-content: center; flex-direction: column; border-bottom: 2px dashed #f1f2f6; padding-bottom: 18px; margin-bottom: 15px; }
+    .header img { width: 70px; height: 70px; border-radius: 20px; box-shadow: 0 8px 15px rgba(227, 6, 19, 0.25); object-fit: cover; margin-bottom: 10px; transition: transform 0.3s ease; }
+    .header h3 { margin: 0; color: var(--rojo); font-size: 26px; font-weight: 900; letter-spacing: -1px; }
+    .header p { margin: 0; font-size: 11px; color: var(--muted); font-weight: 800; letter-spacing: 1.5px; }
+
+    .opcion { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f8f9fa; flex-wrap: wrap; }
+    .opcion-info { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; color: #2d3436; }
+
+    .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #dfe6e9; transition: .4s; border-radius: 30px; }
+    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--rojo); }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    .select-box { margin-top: 10px; padding-bottom: 15px; }
+    select { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #f1f2f6; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--text); background: var(--card); cursor: pointer; outline: none; }
+    select:focus { border-color: var(--rojo); }
+
+    .hint-box { display: none; width: 100%; background: #fff0f1; border-left: 4px solid var(--rojo); padding: 10px 12px; margin-top: 12px; border-radius: 0 10px 10px 0; font-size: 12px; color: #d63031; box-sizing: border-box; }
+    .footer { margin-top: 15px; padding-top: 15px; border-top: 2px dashed #f1f2f6; text-align: center; }
+    .footer p { margin: 0; font-size: 10px; color: #636e72; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <!-- Añadimos el id 'logoLite' para procesarlo con JavaScript -->
+      <img id="logoLite" src="AdaptaPELite.png" alt="Adapta PE Lite">
+      <h3>Adapta PE Lite</h3>
+      <p>EDICIÓN HANDS-FREE REDUCIDA</p>
+    </div>
+
+    <div class="opcion" style="flex-direction: column; align-items: flex-start;">
+      <div style="display:flex; justify-content:space-between; width:100%;">
+        <div class="opcion-info">🤖 Asistente de Voz Activo</div>
+        <label class="switch"><input type="checkbox" id="checkVoz"><span class="slider"></span></label>
+      </div>
+      <div class="hint-box" id="hintVoz">
+        <strong>Comandos:</strong> Di "Computadora", espera el beep y dicta instrucciones.
+      </div>
+    </div>
+
+    <div class="select-box">
+      <div class="opcion-info" style="margin-bottom: 12px;">👁️ Filtros Clínicos de Daltonismo</div>
+      <select id="selectDaltonismo">
+        <option value="ninguno">Normal (Sin Filtros)</option>
+        <optgroup label="Daltonismo Rojo-Verde">
+          <option value="deuteranomalia">Deuteranomalía (Verde Débil)</option>
+          <option value="protanomalia">Protanomalía (Rojo Débil)</option>
+          <option value="deuteranopia">Deuteranopia (Sin Verde)</option>
+          <option value="protanopia">Protanopia (Sin Rojo)</option>
+        </optgroup>
+        <optgroup label="Daltonismo Azul-Amarillo">
+          <option value="tritanomalia">Tritanomalía (Azul Débil)</option>
+          <option value="tritanopia">Tritanopia (Sin Azul)</option>
+        </optgroup>
+        <optgroup label="Monocromatismo">
+          <option value="acromatopsia">Acromatopsia (Escala de Grises)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="footer">
+      <p>Adapta PE Lite © 2026 by Rodrigo Alejandro Apcho Aliaga.</p>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
