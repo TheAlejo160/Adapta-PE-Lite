@@ -24,7 +24,8 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "system.display"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -34,7 +35,7 @@
       "matches": ["<all_urls>"],
       "js": [
         "clases/FiltrosDaltonismo.js",
-        "clases/AsistenteVoz.js",
+        "clases/VoiceAssistant.js",
         "content_script.js"
       ],
       "run_at": "document_end"

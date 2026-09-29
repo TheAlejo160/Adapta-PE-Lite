@@ -3,7 +3,7 @@ const selectDaltonismo = document.getElementById("selectDaltonismo");
 const hintVoz = document.getElementById("hintVoz");
 const logo = document.getElementById("logoLite");
 
-// --- Función para quitar fondo negro (Adaptada de TS a JS nativo) ---
+// --- Función para quitar fondo negro ---
 function removerFondoNegro(sourceUrl) {
     return new Promise((resolve) => {
         const img = new Image();
@@ -19,7 +19,6 @@ function removerFondoNegro(sourceUrl) {
             const data = imageData.data;
 
             for (let i = 0; i < data.length; i += 4) {
-                // Si es negro puro (o casi puro, margen de < 5 para evitar bordes dentados por compresión)
                 if (data[i] < 5 && data[i + 1] < 5 && data[i + 2] < 5) {
                     data[i + 3] = 0; // Transparencia total
                 }
@@ -33,7 +32,6 @@ function removerFondoNegro(sourceUrl) {
 
 // Inicializar estado e imagen
 async function inicializar() {
-    // 1. Limpiar logo
     try {
         const imagenTransparenteUrl = await removerFondoNegro('AdaptaPELite.png');
         logo.src = imagenTransparenteUrl;
@@ -41,7 +39,6 @@ async function inicializar() {
         console.warn("No se pudo procesar la imagen del logo.");
     }
 
-    // 2. Cargar preferencias
     chrome.storage.local.get(["voz", "daltonismo"], (res) => {
         checkVoz.checked = res.voz || false;
         selectDaltonismo.value = res.daltonismo || "ninguno";
@@ -49,24 +46,26 @@ async function inicializar() {
     });
 }
 
-async function guardarYAvisar() {
+// Guardar cambios y avisar a todas las pestañas abiertas
+async function guardarYNotificar() {
+    hintVoz.style.display = checkVoz.checked ? "block" : "none";
+
     await chrome.storage.local.set({
         voz: checkVoz.checked,
         daltonismo: selectDaltonismo.value
     });
 
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab && tab.url && !tab.url.startsWith("chrome://")) {
-        chrome.tabs.sendMessage(tab.id, { accion: "actualizar_estado" }).catch(()=>{});
+    let tabs = await chrome.tabs.query({});
+    for (let tab of tabs) {
+        if (tab.url && !tab.url.startsWith("chrome://") && !tab.url.startsWith("edge://")) {
+            chrome.tabs.sendMessage(tab.id, { accion: "actualizar_estado" }).catch(() => {});
+        }
     }
 }
 
 // Event Listeners
-checkVoz.addEventListener("change", (e) => {
-    hintVoz.style.display = e.target.checked ? "block" : "none";
-    guardarYAvisar();
-});
-selectDaltonismo.addEventListener("change", guardarYAvisar);
+checkVoz.addEventListener("change", guardarYNotificar);
+selectDaltonismo.addEventListener("change", guardarYNotificar);
 
 // Arrancar popup
 inicializar();
