@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Adapta PE Lite",
-  "version": "1.0",
+  "version": "2.0",
   "description": "Versión ligera enfocada en Asistencia de Voz y Filtros de Daltonismo Avanzados.",
   "author": "Rodrigo Alejandro Apcho Aliaga (TheAlejo160)",
   "homepage_url": "https://adaptape.thealejo-dev.cc",
@@ -25,15 +25,21 @@
   "permissions": [
     "storage",
     "tabs",
-    "system.display"
+    "system.display",
+    "offscreen",
+    "scripting",
+    "tts"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "<all_urls>"
+      ],
       "js": [
+        "sitios.js",
         "clases/FiltrosDaltonismo.js",
         "clases/VoiceAssistant.js",
         "content_script.js"
@@ -41,5 +47,5 @@
       "run_at": "document_end"
     }
   ],
-  "minimum_chrome_version": "88"
+  "minimum_chrome_version": "116"
 }
