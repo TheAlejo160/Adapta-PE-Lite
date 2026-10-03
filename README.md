@@ -77,6 +77,17 @@ No necesitas compilar, ejecutar `npm install` ni iniciar Python. Selecciona siem
 
 En Edge o Brave utiliza su página de extensiones equivalente. El soporte de reconocimiento de voz puede variar entre navegadores. No elimines ni muevas la carpeta mientras la instalación descomprimida la utilice.
 
+### Preparación desde terminal
+
+```sh
+git clone https://github.com/TheAlejo160/Adapta-PE-Lite.git
+cd Adapta-PE-Lite
+```
+
+En macOS, `open -a "Google Chrome" 'chrome://extensions/'` abre el administrador. En PowerShell de Windows puedes usar `Start-Process 'chrome.exe' 'chrome://extensions/'` si Chrome está disponible en PATH; si no, abre esa página desde Chrome. Activa Modo de desarrollador y **Cargar descomprimida** con la carpeta recién clonada. Esta confirmación pertenece al navegador: clonar desde terminal no registra automáticamente la extensión.
+
+No hay un comando `npm install` ni una compilación para usarla. Conserva los archivos del manifest, voz, catálogo, clases, iconos y licencias. Para actualizar las fuentes sin reescribir tus cambios, usa `git pull --ff-only` y recarga una vez la extensión.
+
 ## Primer uso
 
 1. Fija el icono de la extensión desde el menú de extensiones de Chrome y abre su panel.
@@ -306,23 +317,24 @@ Mantén JavaScript nativo, nombres y mensajes en español, IDs propios con prefi
 
 Mantén sincronizados con Base el catálogo `sitios.js`, `VoiceAssistant.js`, `FiltrosDaltonismo.js`, los archivos comunes de escucha/permisos/popup de voz y las funciones compartidas de `background.js`. Base utiliza `classes/` y Lite `clases/`; conserva la instancia de voz y filtros propia de Lite al actualizar manifest y controlador. No copies módulos ajenos a su alcance.
 
-Las pruebas compartidas del entorno de desarrollo buscan Lite como carpeta hermana llamada `extensiónLite`. **La carpeta `tests/` está excluida del control de versiones mediante `.gitignore`: los comandos de prueba sólo funcionan si dispones de esos archivos locales.** Clonar las dos extensiones por sí solo no descarga las pruebas. Para preparar la estructura de carpetas:
+Las pruebas compartidas se publican en `tests/` del repositorio **Base** y buscan Lite como carpeta hermana llamada `extensiónLite`. Lite no tiene un runner propio. Para disponer de ambas fuentes y las pruebas:
 
-```bash
+```sh
 git clone https://github.com/TheAlejo160/Adapta-PE.git extensión
 git clone https://github.com/TheAlejo160/Adapta-PE-Lite.git extensiónLite
 cd extensión
+node tests/motores.test.cjs
 ```
 
-Si cuentas con los archivos de pruebas locales, ejecuta `node tests/motores.test.cjs` desde Base. Utiliza Node y módulos nativos para verificar el catálogo, sinónimos, dictado, reconocimiento y sincronización de los módulos compartidos. Lite no contiene una carpeta de pruebas propia.
+El runner utiliza módulos nativos de Node, sin `npm install`, y DOM/cámara simulados. Comprueba parser, alias, dictado Unicode, deduplicación, sincronización de módulos, selección y cinética de Base. Las pruebas y fixtures públicos se conservan en Git; ajustes del IDE, entornos, logs, secretos y memoria de agentes se excluyen.
 
-Para las pruebas locales de integración MV3 y acciones DOM:
+La integración real MV3 y DOM tiene un runner adicional:
 
-```bash
+```sh
 node tests/browser.test.cjs
 ```
 
-Necesitan un Node con `fetch` y `WebSocket` globales y Chrome compatible con CDP `Extensions.loadUnpacked`. Utilizan un perfil temporal y comandos inyectados, silencian el audio y registran las confirmaciones TTS en memoria. Puedes indicar el ejecutable de Chrome con `ADAPTA_CHROME`. Estos comandos no acreditan la precisión del reconocimiento con voces reales ni sustituyen la evaluación con personas usuarias.
+Requiere un Node con `fetch` y `WebSocket` globales (por ejemplo Node 22) y Chrome compatible con CDP `Extensions.loadUnpacked`. Busca Chrome en `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`; permite otra ruta mediante `ADAPTA_CHROME`. Usa perfil temporal, cámara/audio sintéticos y comandos inyectados; silencia salida de audio y conserva avisos TTS sólo en memoria. Los fixtures y su procedencia están en [tests/fixtures/README.md](https://github.com/TheAlejo160/Adapta-PE/blob/main/tests/fixtures/README.md) de Base. La prueba no acredita precisión de reconocimiento hablado ni accesibilidad universal con personas usuarias.
 
 Al revisar Lite, verifica autorización visible, búsquedas desde Nueva pestaña, continuidad entre ventanas, dictado en un formulario, selección sin clic, confirmación de la selección, desactivación de Voz y persistencia de los filtros. Ninguna prueba de desarrollo es necesaria para instalar o usar la extensión.
 
@@ -349,3 +361,20 @@ Consulta el [resumen oficial en español](https://creativecommons.org/licenses/b
 
 > 🤖 **Declaración de uso de Inteligencia Artificial:** En este proyecto se utilizaron herramientas de Inteligencia Artificial generativa para la creación y optimización de recursos gráficos/imágenes, así como para la asistencia y co-creación en partes específicas del código fuente (sin abarcar la totalidad del desarrollo, el cual fue diseñado, integrado y supervisado por el autor).
 
+
+## Verificación de la documentación
+
+El 3 de octubre de 2026 pasaron los 28 grupos de regresión compartidos desde Base, incluidas las exclusiones y sincronización Lite. Se comprobaron recursos del manifest y enlaces locales del README. No se probó precisión de voz real ni se repitió el runner CDP en esta revisión documental.
+
+## Proyectos de la familia Adapta PE
+
+| Programa | Código y alcance |
+| --- | --- |
+| Extensión Base | [Adapta-PE](https://github.com/TheAlejo160/Adapta-PE): voz, filtros, cursor de página y TalkBack. |
+| Extensión Lite | [Adapta-PE-Lite](https://github.com/TheAlejo160/Adapta-PE-Lite): voz y filtros. |
+| Windows Base | [Adapta-PE-Win](https://github.com/TheAlejo160/Adapta-PE-Win): aplicación WPF independiente. |
+| Windows Lite | [Adapta-PE-Lite-Win](https://github.com/TheAlejo160/Adapta-PE-Lite-Win): voz, lectura manual y filtros. |
+| macOS Base y Lite funcional | [Adapta-PE-MacOS-Intel-Apple-Silicon-](https://github.com/TheAlejo160/Adapta-PE-MacOS-Intel-Apple-Silicon-): dos proyectos Xcode que comparten motores. |
+| macOS Lite independiente | [Adapta-PE-Lite-MacOS](https://github.com/TheAlejo160/Adapta-PE-Lite-MacOS): voz y siete filtros en una aplicación autónoma. |
+
+Los números de versión y permisos pertenecen a cada plataforma. Un ZIP de la extensión no instala la aplicación de escritorio. Los repositorios publican fuentes y recursos necesarios; los instaladores generados y la configuración personal quedan fuera de Git.
