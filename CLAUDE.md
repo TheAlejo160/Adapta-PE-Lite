@@ -1,0 +1,29 @@
+# AdaptaPE Lite 3.0: guía de desarrollo
+
+Extensión independiente de Chromium Manifest V3, HTML/CSS y JavaScript nativo. Leer README.md y analizar los métodos antes de editar. Usar el skill codebase-memory para exploración estructural y lectura directa cuando el índice no cubra este checkout.
+
+Lite sólo incluye voz central, filtros y mascotas. Nunca incorporar cámara, visión, KineticEngine o TalkBack de Base. Las clases se encuentran en `clases/`; Base usa `classes/`. Variables, comentarios y mensajes de documentación en español; los textos de interfaz están localizados.
+
+`background.js` gestiona prioridad, reinyección y offscreen; `voz/escucha.js` contiene el único reconocimiento por extensión. `content_script.js` es el controlador; no inicia un micrófono por página. `asegurarControlador()` usa el orden del manifest para recuperar webs ya abiertas sin recarga. Capturar rechazos de `chrome.tabs.sendMessage` y no bloquear la pestaña activa esperando pestañas congeladas. Chrome protege sus páginas internas y la tienda: no afirmar acceso universal a su interfaz.
+
+`sitios.js`, `textos.js`, `textos_paginas.js`, `clases/VoiceAssistant.js`, `background.js` y los módulos compartidos deben permanecer sincronizados con Base. La segunda regla `all_frames` sólo carga filtros; no duplicar voz ni mascotas en iframes. SVG/CSS y la interfaz usan prefijos propios; mascotas usan Shadow DOM y WebP locales.
+
+### Nueva pestaña propia
+
+`nueva_pestana.html`, `nueva_pestana.js`, `nueva_pestana.css` y `nueva_pestana_inicio.js` son idénticos byte a byte a Base. El manifest declara `chrome_url_overrides.newtab` y los permisos `search`, `topSites`, `bookmarks` y `favicon`. Chrome no inyecta content scripts en páginas de extensión: `nueva_pestana_inicio.js` añade en orden los archivos de `content_scripts[0]` de este manifest (sin cámara, KineticEngine ni TalkBack), luego `nueva_pestana.js` y `textos_paginas.js`. La pestaña informa `chrome://newtab/`; `background.js` la localiza con `runtime.getContexts()` y le envía prioridad y `voz_ejecutar` por `documentId`. Como página de extensión recibe también difusiones `runtime.sendMessage`: `alMensaje` ignora emisores con `tab` o el offscreen. Temas propios en `temaNuevaPestana` (`{ preset, acento, fondo }`); Chrome no permite leer su tema activo. Detalles en CLAUDE.md de Base.
+
+Actualizar README al cambiar funciones, comandos o permisos. Mantener AGENTS.md y CLAUDE.md coherentes con arquitectura y alcance. Verificar desde la carpeta hermana Base: `node tests/motores.test.cjs`, `node tests/voz.test.cjs` y `node tests/browser.test.cjs`; este último usa un perfil temporal con sensores sintéticos, nunca valida precisión real de micrófono/cámara ni acceso a todos los juegos.
+
+### Idioma completo de la extensión (Base y Lite)
+
+- `idiomaVoz` es la preferencia única de interfaz y voz: no crear otra clave ni migrar/borrar ajustes. `auto` o un valor desconocido usa `detectarIdiomaVoz([...navigator.languages, navigator.language, chrome.i18n.getUILanguage()])`; primer idioma admitido, región conservada, respaldo `es-PE`. Chrome hereda normalmente el sistema, pero sus preferencias pueden diferir. No añadir un permiso `i18n`.
+- `textos.js` exporta `globalThis.TextosAdapta` (IIFE, reinyección segura): si ya existe, conserva su instancia, idioma y catálogo para no borrar claves del controlador vigente. Cada módulo registra claves españolas y sus cinco traducciones con `definir()`. `fijarIdioma()` usa la base es/en/pt/de/fr/it; una clave ausente cae al español. `textos_paginas.js` traduce popup/bienvenida/permisos con `data-i18n`, atributos accesibles y `adapta-pe-idioma` para rehacer textos con variables. Una lectura inicial tardía de storage no sustituye un cambio posterior.
+- Cargar `textos.js` antes de VoiceAssistant, Mascota, el controlador y escucha offscreen. Las páginas visibles cargan también `sitios.js` y `textos_paginas.js` antes de sus scripts. La segunda regla de filtros de subframes sigue cargando sólo los dos archivos de filtros. No hacer públicos modelos de visión.
+- El controlador aplica idioma al revisar preferencias, retraduce mascota/HUD y descarta el texto de estado anterior. El worker actualiza idioma TTS y el título de `chrome.action`, y offscreen reinicia sólo el reconocedor cuyo idioma cambió. Mantener cámara central y las defensas contra respuestas antiguas.
+- `_locales/es,en,de,fr,it,pt_BR,pt_PT/messages.json` contiene metadatos; ambos manifests usan `default_locale: "es"` y `__MSG_descripcion__` / `__MSG_panel__`. Chrome resuelve esos metadatos con su idioma; la elección manual cambia las pantallas y el título de la barra, sin alterar el nombre legal AdaptaPE.
+- `IdiomasVoz.frases` incluye cursor y mascotas en los seis idiomas. Reglas completas y específicas antes de verbos generales. Traducir intenciones, nunca consultas, dictado, nombres de páginas, nombres de mascotas o texto leído por TalkBack. El parser de páginas recibe órdenes canónicas en español. Los estados de mascota usan `tipo` (error/espera/escucha/activa), no palabras de un idioma.
+- Mantener idénticos Base/Lite `sitios.js`, `textos.js`, `textos_paginas.js`, VoiceAssistant, background y módulos compartidos. Lite no adquiere cámara, cinético, TalkBack ni permisos de éstos. La voz depende de disponibilidad del navegador/servicio y la TTS de las voces instaladas; cambiar textos no prueba precisión acústica.
+
+### Reutilización en Windows y macOS
+
+Al trasladar estas mejoras a apps nativas, usar las preferencias de idioma de la plataforma y una elección manual persistente, compartir catálogos de textos/comandos, y mantener nombres y texto dictado intactos. Separar estado semántico de su texto traducido evita romper mascotas e indicadores. Conservar límites Base/Lite y probar cambio en vivo, persistencia, permisos y recuperación; no copiar `chrome.*` a código nativo. Estas extensiones no actualizan ni validan los proyectos Windows/macOS.

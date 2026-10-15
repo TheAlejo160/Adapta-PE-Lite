@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="bienvenida.tituloLite">Bienvenida a AdaptaPE Lite</title>
+  <link rel="stylesheet" href="interfaz.css">
+</head>
+<body class="permisos">
+  <main class="container">
+    <header class="header"><img src="AdaptaPELite.png" alt="" width="48" height="48"><p>AdaptaPE Lite</p></header>
+    <h1 class="bienvenida-titulo" data-i18n="bienvenida.encabezadoLite">Ya puedes usar AdaptaPE Lite</h1>
+    <p data-i18n="bienvenida.sinRecargar">Funciona en las pestañas que ya tenías abiertas, sin recargarlas.</p>
+    <ol class="bienvenida-pasos">
+      <li data-i18n="bienvenida.paso1">Activa aquí una ayuda. Puedes cambiarla cuando quieras.</li>
+      <li data-i18n="bienvenida.paso2Lite">Si Chrome pide permiso para el micrófono, elige «Permitir».</li>
+      <li data-i18n="bienvenida.paso3Lite">Para tener el panel a mano, pulsa el icono de extensiones (pieza de rompecabezas) junto a la barra de direcciones y luego el alfiler de AdaptaPE Lite.</li>
+    </ol>
+    <p id="adapta-pe-bienvenida-estado" class="estado-panel" role="status" data-i18n="popup.cargando">Cargando tus ajustes…</p>
+
+    <section class="opcion" aria-labelledby="tituloVoz">
+      <div class="fila">
+        <label class="opcion-info" for="checkVoz">
+          <svg class="icono" aria-hidden="true"><use href="iconos.svg#voz"/></svg>
+          <span><strong id="tituloVoz" data-i18n="popup.voz">Control por voz</strong><span class="estado-modulo" id="estadoVoz" data-i18n="popup.desactivado">Desactivado</span></span>
+        </label>
+        <label class="switch"><input type="checkbox" id="checkVoz" data-clave="voz" aria-labelledby="tituloVoz" aria-describedby="ayudaVoz estadoVoz"><span class="slider" aria-hidden="true"></span></label>
+      </div>
+      <p id="ayudaVoz" class="descripcion" data-i18n="bienvenida.ayudaVoz">Di «Computadora», espera el sonido y da tu orden, por ejemplo «Abre YouTube».</p>
+    </section>
+
+    <p data-i18n="bienvenida.finalLite">Los filtros de color, el idioma de voz y la mascota están en el panel de AdaptaPE Lite.</p>
+    <script src="textos.js"></script>
+    <script src="sitios.js"></script>
+    <script src="textos_paginas.js"></script>
+    <script src="bienvenida.js"></script>
+  </main>
+</body>
+</html>

@@ -1,168 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap');
-
-    :root {
-      --rojo: #E30613;
-      --bg: #e4e8ec;
-      --card: #ffffff;
-      --text: #2d3436;
-      --muted: #b2bec3;
-    }
-
-    body {
-      width: 360px;
-      padding: 15px;
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      margin: 0;
-      color: var(--text);
-    }
-
-    .container {
-      background: var(--card);
-      border-radius: 24px;
-      padding: 25px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      border-bottom: 2px dashed #f1f2f6;
-      padding-bottom: 18px;
-      margin-bottom: 15px;
-    }
-
-    .header img {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      box-shadow: 0 8px 15px rgba(227, 6, 19, 0.25);
-      object-fit: cover;
-      margin-bottom: 10px;
-      transition: transform 0.3s ease;
-    }
-    .header img:hover { transform: scale(1.05); }
-
-    .header h3 { margin: 0; color: var(--rojo); font-size: 26px; font-weight: 900; letter-spacing: -1px; }
-    .header p { margin: 0; font-size: 11px; color: var(--muted); font-weight: 800; letter-spacing: 1.5px; }
-
-    .opcion { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f8f9fa; flex-wrap: wrap; }
-    .opcion-info { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; color: #2d3436; }
-
-    /* Toggle Switch Moderno */
-    .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #dfe6e9; transition: .4s; border-radius: 30px; }
-    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    input:checked + .slider { background-color: var(--rojo); }
-    input:checked + .slider:before { transform: translateX(22px); }
-
-    /* Dropdown */
-    .select-box { margin-top: 10px; padding-bottom: 15px; }
-    select { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #f1f2f6; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--text); background: var(--card); cursor: pointer; outline: none; transition: 0.3s; }
-    select:focus { border-color: var(--rojo); }
-    optgroup { font-weight: 900; color: var(--rojo); }
-
-    /* Cajas de Ayuda */
-    .hint-box { display: none; width: 100%; background: #fff0f1; border-left: 4px solid var(--rojo); padding: 10px 12px; margin-top: 12px; border-radius: 0 10px 10px 0; font-size: 12px; color: #d63031; box-sizing: border-box; line-height: 1.4; animation: fadeIn 0.3s ease-in-out; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* --- SECCIÓN LICENCIA CC --- */
-    .footer {
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 2px dashed #f1f2f6;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .footer img { height: 31px; border-radius: 4px; transition: opacity 0.2s; }
-    .footer img:hover { opacity: 0.8; }
-
-    .footer p {
-      margin: 0;
-      font-size: 11.5px;
-      color: #636e72;
-      line-height: 1.6;
-      font-weight: 700;
-    }
-
-    .footer a.link {
-      color: var(--rojo);
-      text-decoration: none;
-      font-weight: 800;
-      transition: color 0.2s;
-    }
-    .footer a.link:hover { text-decoration: underline; color: #b7000c; }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="popup.tituloLite">Ayudas de AdaptaPE Lite</title>
+  <link rel="stylesheet" href="interfaz.css">
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <img id="logoLite" src="AdaptaPELite.png" alt="Adapta PE Lite Logo">
-      <h3>Adapta PE Lite</h3>
-      <p>EDICIÓN HANDS-FREE REDUCIDA</p>
-    </div>
+  <main class="container">
+    <header class="header">
+      <img id="logoLite" src="AdaptaPELite.png" alt="" width="48" height="48">
+      <div><h1>AdaptaPE Lite</h1><p>Lite v3.0</p></div>
+    </header>
+    <p class="introduccion" data-i18n="popup.introduccion">Elige las ayudas que quieres usar.</p>
+    <p id="estadoPanel" class="estado-panel" role="status" data-i18n="popup.cargando">Cargando tus ajustes…</p>
 
-    <!-- Opciones del Sistema (Solo Voz y Daltonismo) -->
-    <div class="opcion" style="flex-direction: column; align-items: flex-start; border-bottom: 1px solid #f8f9fa;">
-      <div style="display:flex; justify-content:space-between; width:100%;">
-        <div class="opcion-info">🤖 Asistente de Voz Activo</div>
-        <label class="switch"><input type="checkbox" id="checkVoz" aria-label="Activar Asistente de Voz"><span class="slider"></span></label>
+    <section class="opcion" aria-labelledby="tituloVoz">
+      <div class="fila">
+        <label class="opcion-info" for="checkVoz">
+          <svg class="icono" aria-hidden="true"><use href="iconos.svg#voz"/></svg>
+          <span><strong id="tituloVoz" data-i18n="popup.voz">Control por voz</strong><span class="estado-modulo" id="estadoVoz" data-i18n="popup.desactivado">Desactivado</span></span>
+        </label>
+        <label class="switch"><input type="checkbox" id="checkVoz" aria-labelledby="tituloVoz" aria-describedby="ayudaVoz estadoVoz"><span class="slider" aria-hidden="true"></span></label>
       </div>
+      <p id="ayudaVoz" class="descripcion" data-i18n="popup.ayudaVoz">Di «Computadora» y espera el sonido.</p>
       <div class="hint-box" id="hintVoz">
-        <strong>Comandos:</strong> Di "Computadora", espera el beep, y di: "Abre YouTube", "Busca gatitos", "Bajar", o "Cerrar pestaña".
+        <label for="selectIdiomaVoz" data-i18n="popup.idioma">Idioma</label>
+        <select id="selectIdiomaVoz" aria-describedby="ayudaIdiomaVoz">
+          <option value="auto">Automático (idioma de Chrome)</option>
+          <option value="es-PE" lang="es-PE">Español (Perú)</option>
+          <option value="es-ES" lang="es-ES">Español (España)</option>
+          <option value="es-MX" lang="es-MX">Español (México)</option>
+          <option value="es-AR" lang="es-AR">Español (Argentina)</option>
+          <option value="es-CO" lang="es-CO">Español (Colombia)</option>
+          <option value="es-CL" lang="es-CL">Español (Chile)</option>
+          <option value="es-US" lang="es-US">Español (Estados Unidos)</option>
+          <option value="en-US" lang="en-US">English (United States)</option>
+          <option value="en-GB" lang="en-GB">English (United Kingdom)</option>
+          <option value="pt-BR" lang="pt-BR">Português (Brasil)</option>
+          <option value="pt-PT" lang="pt-PT">Português (Portugal)</option>
+          <option value="de-DE" lang="de-DE">Deutsch</option>
+          <option value="fr-FR" lang="fr-FR">Français</option>
+          <option value="it-IT" lang="it-IT">Italiano</option>
+        </select>
+        <p id="ayudaIdiomaVoz" data-i18n="popup.ayudaIdioma">Idioma de AdaptaPE y de tus órdenes de voz. «Automático» usa el idioma de tu computadora.</p>
+        <details><summary data-i18n="popup.ordenes">Órdenes y micrófono</summary><p data-i18n="popup.ejemplosVoz">Después del sonido, di «Abre YouTube», «Busca gatos», «Bajar» o «Cerrar pestaña». Di «Ayuda» para escuchar más órdenes.</p></details>
       </div>
-    </div>
+    </section>
 
-    <div class="select-box">
-      <div class="opcion-info" style="margin-bottom: 12px;">👁️ Filtros Clínicos de Daltonismo</div>
-      <select id="selectDaltonismo" aria-label="Seleccionar filtro de daltonismo">
-        <option value="ninguno">Visión Normal (Sin Filtros)</option>
-
-        <optgroup label="🔴🟢 Rojo-Verde">
-          <option value="deuteranomalia">Deuteranomalía (Verdes se ven rojizos)</option>
-          <option value="protanomalia">Protanomalía (Rojos se ven verdes y opacos)</option>
-          <option value="deuteranopia">Deuteranopía (Confusión total rojo/verde)</option>
-          <option value="protanopia">Protanopía (Confusión total rojo/verde)</option>
+    <section class="select-box" aria-labelledby="tituloFiltros">
+      <label class="opcion-info" for="selectDaltonismo">
+        <svg class="icono" aria-hidden="true"><use href="iconos.svg#color"/></svg>
+        <strong id="tituloFiltros" data-i18n="popup.filtros">Filtros de color</strong>
+      </label>
+      <p id="ayudaFiltro" class="descripcion" data-i18n="popup.ayudaFiltro">Elige tu filtro de daltonismo.</p>
+      <select id="selectDaltonismo" aria-describedby="ayudaFiltro estadoDaltonismo">
+        <option value="ninguno" data-i18n="popup.sinFiltro">Sin filtro</option>
+        <optgroup label="Rojo y verde" data-i18n-label="popup.grupoRojoVerde">
+          <option value="deuteranomalia" data-i18n="popup.deuteranomalia">Deuteranomalía</option>
+          <option value="protanomalia" data-i18n="popup.protanomalia">Protanomalía</option>
+          <option value="deuteranopia" data-i18n="popup.deuteranopia">Deuteranopía</option>
+          <option value="protanopia" data-i18n="popup.protanopia">Protanopía</option>
         </optgroup>
-
-        <optgroup label="🔵🟡 Azul-Amarillo">
-          <option value="tritanomalia">Tritanomalía (Dificultad entre azul/verde y amarillo/rojo)</option>
-          <option value="tritanopia">Tritanopía (Sin conos azules)</option>
+        <optgroup label="Azul y amarillo" data-i18n-label="popup.grupoAzulAmarillo">
+          <option value="tritanomalia" data-i18n="popup.tritanomalia">Tritanomalía</option>
+          <option value="tritanopia" data-i18n="popup.tritanopia">Tritanopía</option>
         </optgroup>
-
-        <optgroup label="⚫⚪ Daltonismo Completo">
-          <option value="acromatopsia">Acromatopsia (Escala de grises)</option>
+        <optgroup label="Escala de grises" data-i18n-label="popup.grupoGrises">
+          <option value="acromatopsia" data-i18n="popup.acromatopsia">Acromatopsia</option>
         </optgroup>
       </select>
-    </div>
+      <div class="filtro-feedback">
+        <p id="estadoDaltonismo" role="status" data-i18n="popup.sinFiltroActivo">Sin filtro activo</p>
+        <button id="quitarDaltonismo" type="button" hidden data-i18n="popup.quitarFiltro">Quitar filtro</button>
+      </div>
+    </section>
 
-    <!-- FOOTER Y LICENCIA -->
-    <div class="footer">
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="Ver Licencia Creative Commons">
-        <img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="CC BY-NC-SA 4.0">
-      </a>
-      <p>
-        <a href="https://thealejo-dev.cc" target="_blank" class="link">Adapta PE</a> © 2026 by
-        <a href="https://github.com/TheAlejo160" target="_blank" class="link">Rodrigo Alejandro Apcho Aliaga</a>.<br>
-        Licenciado bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" class="link">CC BY-NC-SA 4.0 Internacional</a>.
-      </p>
-    </div>
+    <section class="select-box" aria-labelledby="tituloMascota">
+      <label class="opcion-info" for="selectMascota">
+        <svg class="icono" aria-hidden="true"><use href="iconos.svg#mascota"/></svg>
+        <strong id="tituloMascota" data-i18n="popup.mascota">Tu mascota</strong>
+      </label>
+      <p class="descripcion" data-i18n="popup.mascotaDescripcionLite">Te acompaña con el control por voz.</p>
+      <select id="selectMascota" aria-describedby="estadoMascota ayudaMascota" disabled>
+        <option value="ninguna" data-i18n="popup.sinMascota">Sin mascota</option>
+        <option value="tinku" data-i18n="popup.tinku">Tinku · gallito de las rocas</option>
+        <option value="cuchu" data-i18n="popup.cuchu">Cuchu · cuy</option>
+        <option value="yati" data-i18n="popup.yati">Yati · llama</option>
+      </select>
+      <p id="estadoMascota" class="estado-modulo" role="status" data-i18n="popup.cargandoMascota">Cargando mascota…</p>
+      <details><summary data-i18n="popup.comoMascota">Cómo usar tu mascota</summary>
+        <p id="ayudaMascota" data-i18n="popup.ayudaMascotaLite">Sigue el cursor. Arrastra su nombre o enfócalo y usa las flechas para moverla. Guarda su ubicación entre páginas.</p>
+        <p data-i18n="popup.vozMascota">Di «Computadora, mascota Tinku», «mascota Cuchu» o «mascota Yati». También: «saluda mascota», «duerme mascota», «despierta mascota» y «oculta mascota».</p>
+      </details>
+    </section>
 
-  </div>
+    <footer class="footer">
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" title="Ver licencia Creative Commons" data-i18n-title="popup.verLicencia"><img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="Creative Commons BY-NC-SA 4.0" width="88" height="31"></a>
+      <p><a href="https://thealejo-dev.cc" target="_blank" rel="noopener noreferrer">AdaptaPE</a> © 2026<br>
+        <a href="https://github.com/TheAlejo160" target="_blank" rel="noopener noreferrer">Rodrigo Alejandro Apcho Aliaga</a><br>
+        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" data-i18n="popup.licencia">Licencia CC BY-NC-SA 4.0 Internacional</a></p>
+    </footer>
+  </main>
+  <script src="textos.js"></script>
+  <script src="sitios.js"></script>
+  <script src="textos_paginas.js"></script>
   <script src="popup.js"></script>
-<script src="voz/popup.js"></script>
+  <script src="voz/popup.js"></script>
+  <script src="mascotas/popup.js"></script>
 </body>
 </html>
