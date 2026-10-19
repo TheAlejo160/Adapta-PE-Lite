@@ -2,21 +2,24 @@
   <img src="AdaptaPELite.png" alt="Logo de AdaptaPE Lite" width="250">
 </p>
 
-# 🇵🇪 AdaptaPE Lite — Asistencia de voz y filtros de color
+# AdaptaPE Lite: voz, filtros, mascotas y Nueva pestaña en Chrome
 
-> **Versión del código:** 3.0 · Manifest V3.
-> **Requisito mínimo del manifest:** Chromium 119 o posterior.
-> **Navegadores objetivo:** Google Chrome y derivados Chromium, como Edge y Brave; la voz requiere una API de reconocimiento disponible.
-> **Sitio oficial:** [adaptape.thealejo-dev.cc](https://adaptape.thealejo-dev.cc).
+> **Versión del código:** 3.0 · Manifest V3 · Chromium 119 o posterior.
+> **Navegadores:** Google Chrome y derivados Chromium (Edge, Brave); la voz requiere que el navegador ofrezca reconocimiento de voz.
+> **Instalación rápida:** [Chrome Web Store](https://chromewebstore.google.com/detail/amjlgkcmgpdcngjagmplgmhiicfpnkhh) o desde este repositorio (ver [Descarga e instalación](#descarga-e-instalación)).
+> **Sitio oficial:** [adaptape.cc](https://www.adaptape.cc) (también adaptape.thealejo-dev.cc, que es el enlace del manifest y de la Nueva pestaña).
 > **Código fuente:** [TheAlejo160/Adapta-PE-Lite](https://github.com/TheAlejo160/Adapta-PE-Lite).
+
+AdaptaPE Lite es la edición ligera de la extensión: controla el navegador con la voz, aplica siete filtros de color y ofrece una mascota y una Nueva pestaña propia. **No usa cámara, no mueve el cursor con el cuerpo y no lee la pantalla en voz alta al pasar el cursor.** Si necesitas esas funciones, usa la [edición Base](https://github.com/TheAlejo160/Adapta-PE).
 
 ## Contenido
 
 - [Qué es AdaptaPE Lite](#qué-es-adaptape-lite)
+- [Lite frente a Base](#lite-frente-a-base)
 - [A quién está dirigida](#a-quién-está-dirigida)
 - [Cómo funciona en el uso diario](#cómo-funciona-en-el-uso-diario)
 - [Descarga e instalación](#descarga-e-instalación)
-- [Primer uso](#primer-uso)
+- [Primer uso: tutorial paso a paso](#primer-uso-tutorial-paso-a-paso)
 - [Usos y ejemplos](#usos-y-ejemplos)
 - [Nueva pestaña de AdaptaPE](#nueva-pestaña-de-adaptape)
 - [Comandos de voz](#comandos-de-voz)
@@ -30,20 +33,6 @@
 - [Desarrollo y comprobaciones](#desarrollo-y-comprobaciones)
 - [Autoría, licencia y uso de IA](#autoría-licencia-y-uso-de-ia)
 
-## Mascotas
-
-Lite 3.0 permite elegir **Tinku** (gallito de las rocas), **Cuchu** (cuy) o **Yati** (llama) en «Tu mascota», o dejar «Sin mascota».
-
-Aparece abajo a la derecha en cada web permitida y sigue el cursor. Arrastra su nombre o enfócalo con Tab y usa las flechas para moverla. La ubicación se guarda entre páginas y se adapta a la ventana. Chrome bloquea esta interfaz en sus páginas internas y la tienda.
-
-Con Voz activada, di «Computadora» y después «mascota Tinku», «mascota Cuchu» o «mascota Yati». También puedes decir «saluda mascota», «duerme mascota», «despierta mascota» y «oculta mascota». Reacciona a la espera de comandos, errores y respuestas habladas. La lectura con TalkBack y el cursor cinético siguen siendo exclusivos de Base.
-
-Los nombres toleran separaciones y letras repetidas, como «Y Atti», «Ya ti», «Tin cu» y «Cu chu», además de variantes acotadas como Tincu, Tinko, Kuchu, Cucho, Yaty y Yate. Sólo se corrigen dentro de la orden para elegir mascota; búsquedas y dictado conservan su texto. El indicador conserva su estado al abrir el panel, y mascota, indicador y filtros se recuperan si una web sustituye su contenido al navegar.
-
-Al actualizar la extensión instalada como carpeta, recárgala una vez en `chrome://extensions` para que Chrome lea los archivos y permisos nuevos. Las pestañas web se reconectan automáticamente; los recursos de mascotas están declarados en el manifest. Lite no carga MediaPipe ni cámara.
-
-Usa WebP locales con transparencia y codificación sin pérdida. Cada pestaña visible carga sólo la elegida; al perder prioridad pausa su animación y conserva la imagen, incluso al cambiar ayudas o abrir el panel. Las pestañas ocultas liberan sprites y los recuperan al volver, sin recargar. Respeta «reducir movimiento» del sistema. Sólo se guardan nombre y ubicación. Reutiliza el motor de Mascota-Modular-Adapta-PE, sin dependencias externas.
-
 ## Qué es AdaptaPE Lite
 
 **AdaptaPE Lite** es una extensión centrada en **asistencia de voz y filtros de color**. Conserva íntegros esos módulos: permite abrir sitios, buscar, gestionar pestañas y ventanas, dictar en campos, resaltar elementos y activarlos por su nombre.
@@ -56,12 +45,30 @@ Usa WebP locales con transparencia y codificación sin pérdida. Cada pestaña v
 | Selección y clic por voz | Identificar un elemento, resaltarlo y confirmar su activación. |
 | Siete filtros de color | Cambiar la presentación visual y conservarla entre webs permitidas. |
 
-Lite se instala de manera independiente. Si también utilizas [AdaptaPE Base](https://github.com/TheAlejo160/Adapta-PE), **activa Voz sólo en una variante** para evitar dos reconocedores simultáneos. Sus preferencias y permisos son independientes.
+Lite se instala de manera independiente. No conviene tener **Control por voz activo en Lite y en [Base](https://github.com/TheAlejo160/Adapta-PE) a la vez**: cada una tiene su propio reconocedor y competirían por el micrófono, con órdenes repetidas. Activa Voz sólo en una; sus preferencias y permisos son independientes.
+
+## Lite frente a Base
+
+Lite y Base comparten el mismo parser de voz, el catálogo de sitios, los filtros, las mascotas y la Nueva pestaña (esos archivos son idénticos byte a byte). Lite omite todo lo que usa la cámara:
+
+| Aspecto | Lite 3.0 | Base 13.0 |
+| --- | --- | --- |
+| Control por voz, siete filtros de color, mascotas, Nueva pestaña | Sí | Sí |
+| Cámara, MediaPipe y cursor controlado con cabeza, manos o zona | No (el manifest no incluye esos módulos) | Sí |
+| TalkBack (lectura al pasar el cursor) | No | Sí |
+| Scripts de página | `sitios.js`, `textos.js`, filtros, `VoiceAssistant.js`, mascota y controlador | Los anteriores más `TalkBack.js` y `KineticEngine.js` |
+| Política CSP de páginas de extensión | La predeterminada de Manifest V3 | Añade `wasm-unsafe-eval` para los modelos locales |
+| Documento offscreen | Sólo voz | Voz y cámara |
+| Modelos y carpeta `vision/` | No incluye modelos de visión; no procesa imágenes | Incluye modelos y WASM locales |
+
+**Permisos.** El manifest de Lite declara `storage`, `tabs`, `system.display`, `offscreen`, `scripting`, `tts`, `search`, `topSites`, `bookmarks` y `favicon`, más acceso a `<all_urls>`. Son los mismos que declara Base: Lite no pide menos permisos del navegador, pero no tiene ningún permiso ni código para capturar vídeo, y no incluye la política `wasm-unsafe-eval`. La cámara de Base se concede por el flujo de medios del navegador, no por un permiso del manifest. En esta edición el único dispositivo que se usa es el micrófono.
 
 ## A quién está dirigida
 
 - Personas que quieren adaptar la presentación de colores a su percepción o comodidad visual.
 - Personas que prefieren navegar, buscar o dictar por voz y reducir el uso repetido del teclado y ratón.
+- Personas con un equipo modesto (portátiles antiguos o compartidos) que no quieren cargar modelos de visión ni procesar cámara.
+- Quien sólo necesita voz o filtros, o no puede o no quiere usar la cámara por privacidad o por no tener una.
 - Estudiantes, profesionales y público general que buscan esas funciones en una extensión centrada en voz y filtros.
 
 La voz debe poder ser reconocida por el navegador y los elementos deben tener nombres o etiquetas que la extensión pueda localizar. Los filtros son transformaciones visuales fijas, no una corrección personalizada ni un diagnóstico.
@@ -73,6 +80,10 @@ Activa Voz, concede el permiso de micrófono de la extensión y utiliza «Comput
 Elige el filtro de color en el panel. La preferencia se aplica a las webs permitidas, incluidas las ya abiertas y las pestañas de fondo. La extensión recupera sus controladores sin pedirte que recargues cada web. Si desactivas o desinstalas la extensión, los filtros y el indicador se retiran de las pestañas abiertas al volver a mostrarlas o cuando la web cambia su contenido, también sin recargar. Al volver a una página desde el historial (bfcache), descongelar una pestaña o mostrar una página precargada, el controlador vuelve a leer las preferencias y el estado de voz. Si Chrome protege una página, los filtros y las acciones sobre elementos de esa página no pueden aplicarse allí.
 
 ## Descarga e instalación
+
+### Desde Chrome Web Store
+
+Abre [AdaptaPE Lite en Chrome Web Store](https://chromewebstore.google.com/detail/amjlgkcmgpdcngjagmplgmhiicfpnkhh) y pulsa **Añadir a Chrome**. La tienda puede llevar una versión distinta de la del repositorio; este README describe el código de esta carpeta. Edge y Brave también instalan desde esa tienda.
 
 ### Desde el repositorio: ZIP o Git
 
@@ -89,10 +100,10 @@ No necesitas compilar, ejecutar `npm install` ni iniciar Python. Selecciona siem
 1. Abre `chrome://extensions/` en Chrome.
 2. Activa **Modo de desarrollador**.
 3. Pulsa **Cargar descomprimida** y selecciona esa carpeta.
-4. Comprueba que aparezca **AdaptaPE Lite** habilitada y fija su icono en la barra de herramientas.
+4. Comprueba que aparezca **AdaptaPE Lite** (versión 3.0) habilitada y fija su icono en la barra de herramientas.
 5. Se abre la página de bienvenida de AdaptaPE Lite. Las webs ya abiertas reciben los scripts automáticamente, sin recargarlas.
 
-En Edge o Brave utiliza su página de extensiones equivalente. El soporte de reconocimiento de voz puede variar entre navegadores. No elimines ni muevas la carpeta mientras la instalación descomprimida la utilice.
+En Edge usa `edge://extensions/` y en Brave `brave://extensions/`, con las mismas opciones. El soporte de reconocimiento de voz puede variar entre navegadores. No elimines ni muevas la carpeta mientras la instalación descomprimida la utilice.
 
 ### Preparación desde terminal
 
@@ -105,7 +116,7 @@ En macOS, `open -a "Google Chrome" 'chrome://extensions/'` abre el administrador
 
 No hay un comando `npm install` ni una compilación para usarla. Conserva los archivos del manifest, voz, catálogo, clases, iconos y licencias. Para actualizar las fuentes sin reescribir tus cambios, usa `git pull --ff-only` y recarga una vez la extensión.
 
-## Primer uso
+## Primer uso: tutorial paso a paso
 
 Al instalar la extensión se abre una **página de bienvenida** (`bienvenida.html`) con el interruptor de **Control por voz**. Sólo guarda la preferencia cuando lo pulsas; el permiso de micrófono se pide con el flujo habitual. Filtros, idioma y mascota se eligen en el panel.
 
@@ -295,6 +306,20 @@ Por ejemplo, la matriz de Protanopia calcula `R′ = 0.567R + 0.433G`, `G′ = 0
 
 Son transformaciones visuales fijas: no diagnostican ni corrigen médicamente el daltonismo, y su utilidad puede variar entre personas y sitios. Elige la opción que te resulte más cómoda; los nombres no implican una corrección personalizada.
 
+## Mascotas
+
+Lite 3.0 permite elegir **Tinku** (gallito de las rocas), **Cuchu** (cuy) o **Yati** (llama) en «Tu mascota», o dejar «Sin mascota».
+
+Aparece abajo a la derecha en cada web permitida y sigue el cursor. Arrastra su nombre o enfócalo con Tab y usa las flechas para moverla. La ubicación se guarda entre páginas y se adapta a la ventana. Chrome bloquea esta interfaz en sus páginas internas y la tienda.
+
+Con Voz activada, di «Computadora» y después «mascota Tinku», «mascota Cuchu» o «mascota Yati». También puedes decir «saluda mascota», «duerme mascota», «despierta mascota» y «oculta mascota». Reacciona a la espera de comandos, errores y respuestas habladas. La lectura con TalkBack y el cursor cinético siguen siendo exclusivos de Base.
+
+Los nombres toleran separaciones y letras repetidas, como «Y Atti», «Ya ti», «Tin cu» y «Cu chu», además de variantes acotadas como Tincu, Tinko, Kuchu, Cucho, Yaty y Yate. Sólo se corrigen dentro de la orden para elegir mascota; búsquedas y dictado conservan su texto. El indicador conserva su estado al abrir el panel, y mascota, indicador y filtros se recuperan si una web sustituye su contenido al navegar.
+
+Al actualizar la extensión instalada como carpeta, recárgala una vez en `chrome://extensions` para que Chrome lea los archivos y permisos nuevos. Las pestañas web se reconectan automáticamente; los recursos de mascotas están declarados en el manifest. Lite no carga MediaPipe ni cámara.
+
+Usa WebP locales con transparencia y codificación sin pérdida. Cada pestaña visible carga sólo la elegida; al perder prioridad pausa su animación y conserva la imagen, incluso al cambiar ayudas o abrir el panel. Las pestañas ocultas liberan sprites y los recuperan al volver, sin recargar. Respeta «reducir movimiento» del sistema. Sólo se guardan nombre y ubicación. Reutiliza el motor de Mascota-Modular-Adapta-PE, sin dependencias externas.
+
 ## Arquitectura y código
 
 La extensión utiliza **HTML, CSS y JavaScript nativo**, sin React, Vue ni jQuery. Manifest V3 separa las preferencias, las operaciones privilegiadas y las acciones sobre páginas.
@@ -419,13 +444,15 @@ El funcionamiento depende del reconocimiento disponible, los permisos y la estru
 
 ## Actualizaciones y solución de problemas
 
-Para una instalación desde el repositorio, descarga los cambios o ejecuta `git pull` dentro de la carpeta clonada. Después **recarga la extensión una vez en `chrome://extensions/`**. El worker reconecta automáticamente las webs abiertas; no tienes que recargar cada página. La instalación de la tienda puede llevar una versión distinta de la del repositorio; este README describe el código de esta carpeta.
+Para una instalación desde el repositorio, ejecuta `git pull --ff-only` dentro de la carpeta clonada. Después **recarga la extensión una vez en `chrome://extensions/`**. El worker reconecta automáticamente las webs abiertas; no tienes que recargar cada página. La instalación de la tienda puede llevar una versión distinta de la del repositorio; este README describe el código de esta carpeta.
 
 | Problema | Comprobación |
 | --- | --- |
 | No escucha o indica micrófono no disponible | Abre **Configurar micrófono**, revisa el permiso de la extensión y del sistema operativo, y desactiva/activa Voz después de corregirlo. |
 | El navegador no admite reconocimiento | Comprueba la disponibilidad de su API de voz. Ser Chromium no garantiza reconocimiento; prueba en Google Chrome con los permisos concedidos. |
-| Repite órdenes o compite por el micrófono | Comprueba que Voz esté activa en una sola variante de AdaptaPE. |
+| Repite órdenes o compite por el micrófono | Voz activa en Lite y en Base a la vez: desactívala en una (ver [Lite frente a Base](#lite-frente-a-base)). También ocurre con otra pestaña o aplicación que use el micrófono. |
+| Pides cursor, cámara o TalkBack | No existen en Lite; instala la [edición Base](https://github.com/TheAlejo160/Adapta-PE). |
+| Cambiaste la carpeta de lugar o la borraste | La instalación descomprimida deja de funcionar: vuelve a cargar la carpeta en `chrome://extensions/`. |
 | «Reconectando micrófono» persiste | Revisa conexión, disponibilidad del servicio de reconocimiento y dispositivo de audio; el motor reintenta automáticamente los fallos recuperables. |
 | Dictado, clic o filtros no funcionan en Nueva pestaña | AdaptaPE Lite sustituye Nueva pestaña por la suya, donde sí funcionan. Si Chrome muestra su propia página, otra extensión la reemplaza o Lite se desactivó: revisa `chrome://extensions`. |
 | El dictado no se inserta | Enfoca un campo visible y editable; comprueba su nombre con «enfoca…». |
@@ -442,29 +469,24 @@ Mantén JavaScript nativo, nombres y mensajes en español, IDs propios con prefi
 
 Mantén sincronizados con Base el catálogo `sitios.js`, `VoiceAssistant.js`, `FiltrosDaltonismo.js`, `filtros_frames.js`, `bienvenida.js`, los archivos comunes de escucha/permisos/popup de voz y las funciones compartidas de `background.js`. Actualmente `sitios.js`, `VoiceAssistant.js`, `voz/escucha.js`, `background.js` y `bienvenida.js` son idénticos byte a byte en Base y Lite. Base utiliza `classes/` y Lite `clases/`; conserva la instancia de voz y filtros propia de Lite al actualizar manifest y controlador. No copies módulos ajenos a su alcance.
 
-Las pruebas compartidas se publican en `tests/` del repositorio **Base** y buscan Lite como carpeta hermana llamada `extensiónLite`. Lite no tiene un runner propio. Para disponer de ambas fuentes y las pruebas:
+Lite no tiene `package.json` ni runner propio: no necesita `npm install`. Sus regresiones viven en `tests/` del repositorio **Base**, que busca Lite como carpeta hermana llamada `extensiónLite`. El único contenido de `tests/` aquí es `fixtures/voz-paridad.json`, que usa el catálogo. Para disponer de ambas fuentes y ejecutar las pruebas (Node 22 o posterior recomendado):
 
 ```sh
 git clone https://github.com/TheAlejo160/Adapta-PE.git extensión
 git clone https://github.com/TheAlejo160/Adapta-PE-Lite.git extensiónLite
 cd extensión
-node tests/motores.test.cjs   # 69 grupos
-node tests/voz.test.cjs       # 14 grupos: traducciones completas (incluida Nueva pestaña), idiomas, comandos y nuevas acciones
+node tests/motores.test.cjs   # 75 grupos; incluye Base y Lite
+node tests/voz.test.cjs       # 15 grupos: idiomas, comandos, textos y archivos de voz idénticos
+node tests/catalogo.test.cjs  # catálogo nativo de ambas ediciones
+cd ../extensiónLite
+node tools/exportar-catalogo.cjs --check   # catálogo de esta edición vigente
 ```
 
-Los runners utilizan módulos nativos de Node, sin `npm install`, y DOM/cámara simulados. Comprueban parser, alias, dictado Unicode, deduplicación, sincronización de módulos, selección, idiomas, que Base y Lite compartan exactamente los archivos de voz y la cinética de Base. `tests/cinetico.test.cjs` sólo afecta a Base. Las pruebas y fixtures públicos se conservan en Git; ajustes del IDE, entornos, logs, secretos y memoria de agentes se excluyen.
+`node tools/exportar-catalogo.cjs` (sin `--check`) regenera `catalogos/nativo-v1.json` desde `sitios.js`, `VoiceAssistant.js`, `textos_paginas.js`, `Mascota.js` y `tests/fixtures/voz-paridad.json`. Los runners usan módulos nativos de Node, DOM simulado y no necesitan red. Comprueban parser, alias, dictado Unicode, deduplicación, selección, idiomas y que Base y Lite compartan exactamente los archivos de voz. `tests/cinetico.test.cjs`, `deteccion.test.cjs` y los HTML de visión sólo afectan a Base.
 
-La integración real MV3 y DOM tiene un runner adicional, con 17 grupos:
+La integración real en Chrome es otro runner del repositorio Base (17 grupos): `node tests/browser.test.cjs`. Requiere Node con `fetch` y `WebSocket` globales y Chrome con CDP `Extensions.loadUnpacked`; busca `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` o la ruta de `ADAPTA_CHROME`, y puede fallar de forma intermitente al arrancar (repetir). Los fixtures y su procedencia están en [tests/fixtures/README.md](https://github.com/TheAlejo160/Adapta-PE/blob/main/tests/fixtures/README.md) de Base. Estas pruebas no acreditan precisión de reconocimiento hablado ni accesibilidad universal.
 
-```sh
-node tests/browser.test.cjs
-```
-
-Requiere un Node con `fetch` y `WebSocket` globales (por ejemplo Node 22) y Chrome compatible con CDP `Extensions.loadUnpacked`. Busca Chrome en `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`; permite otra ruta mediante `ADAPTA_CHROME`. Usa perfil temporal, cámara/audio sintéticos y comandos inyectados; silencia salida de audio y conserva avisos TTS sólo en memoria. Los fixtures y su procedencia están en [tests/fixtures/README.md](https://github.com/TheAlejo160/Adapta-PE/blob/main/tests/fixtures/README.md) de Base. La prueba no acredita precisión de reconocimiento hablado ni accesibilidad universal con personas usuarias.
-
-El runner de navegador compara los colores visibles de Canvas, WebGL y vídeo en ambas variantes, tanto en modo normal como en pantalla completa. Incluye marcos del mismo origen, de otro origen, `srcdoc` y `blob:`; comprueba que no se aplique el filtro dos veces y que cambiarlo o quitarlo funcione sin recargar. Usa contenido de prueba local, sin una sesión de GeForce NOW.
-
-Al revisar Lite, verifica autorización visible, búsquedas desde Nueva pestaña, continuidad entre ventanas, dictado en un formulario, selección sin clic, confirmación de la selección, desactivación de Voz y persistencia de los filtros. Ninguna prueba de desarrollo es necesaria para instalar o usar la extensión.
+Revisión manual recomendada de Lite: autorización visible, búsqueda desde Nueva pestaña, continuidad entre ventanas, dictado en un formulario, selección sin clic, desactivar Voz y persistencia de los filtros. Ninguna prueba es necesaria para instalar o usar la extensión.
 
 ## Autoría, licencia y uso de IA
 
@@ -487,28 +509,26 @@ Consulta el [resumen oficial en español](https://creativecommons.org/licenses/b
 
 ### Declaración de uso de IA
 
-> 🤖 **Declaración de uso de Inteligencia Artificial:** En este proyecto se utilizaron herramientas de Inteligencia Artificial generativa para la creación y optimización de recursos gráficos/imágenes, así como para la asistencia y co-creación en partes específicas del código fuente (sin abarcar la totalidad del desarrollo, el cual fue diseñado, integrado y supervisado por el autor).
+> **Declaración de uso de Inteligencia Artificial:** En este proyecto se utilizaron herramientas de Inteligencia Artificial generativa para la creación y optimización de recursos gráficos/imágenes, así como para la asistencia y co-creación en partes específicas del código fuente (sin abarcar la totalidad del desarrollo, el cual fue diseñado, integrado y supervisado por el autor).
 
 
 ## Verificación de la documentación
 
-El 14 de octubre de 2026 pasaron **69 grupos** en `tests/motores.test.cjs`, **15 grupos** en `tests/cinetico.test.cjs` y **13 grupos** en `tests/voz.test.cjs` (97 en total). También pasó el runner de Chrome con perfil temporal y sensores sintéticos: ambas extensiones, idioma automático en inglés, los seis idiomas del panel, selección manual persistente, bienvenida/permisos en vivo, ayuda de mascotas, indicador y reconocedor, reconexión, navegación, cámara y filtros en juegos. Se revisaron capturas reales de los paneles Base/Lite en inglés. Esto no valida precisión acústica, gestos con personas reales, equipos lentos ni los proyectos nativos Windows/macOS.
+El 18 de octubre de 2026 se ejecutaron desde Base, con Lite como carpeta hermana: `tests/motores.test.cjs` (75 grupos), `tests/voz.test.cjs` (15 grupos) y `tests/catalogo.test.cjs`, además de `node tools/exportar-catalogo.cjs --check` en Lite; todos pasaron. No se ejecutó `tests/browser.test.cjs` en esta revisión. Los permisos y diferencias con Base se compararon leyendo ambos `manifest.json`. Esto no valida precisión acústica, equipos lentos ni los proyectos nativos Windows/macOS.
 
 ## Proyectos de la familia AdaptaPE
 
 | Programa | Código y alcance |
 | --- | --- |
 | Extensión Base | [Adapta-PE](https://github.com/TheAlejo160/Adapta-PE): voz, filtros, cursor de página y TalkBack. |
-| Extensión Lite | [Adapta-PE-Lite](https://github.com/TheAlejo160/Adapta-PE-Lite): voz y filtros. |
+| Extensión Lite | [Adapta-PE-Lite](https://github.com/TheAlejo160/Adapta-PE-Lite): voz, filtros, mascotas y Nueva pestaña. |
 | Windows Base | [Adapta-PE-Win](https://github.com/TheAlejo160/Adapta-PE-Win): aplicación WPF independiente. |
 | Windows Lite | [Adapta-PE-Lite-Win](https://github.com/TheAlejo160/Adapta-PE-Lite-Win): voz, lectura manual y filtros. |
 | macOS completo | [Adapta-PE-MacOS-Intel-Apple-Silicon-](https://github.com/TheAlejo160/Adapta-PE-MacOS-Intel-Apple-Silicon-): sólo Adapta PE completo, con su proyecto Xcode. Lite tiene repositorio y fuentes independientes. |
-| macOS Lite independiente | [Adapta-PE-Lite-MacOS](https://github.com/TheAlejo160/Adapta-PE-Lite-MacOS): voz y siete filtros en una aplicación autónoma. |
+| macOS Lite independiente | [Adapta-PE-Lite-MacOS](https://github.com/TheAlejo160/Adapta-PE-Lite-MacOS): voz, lectura explícita, siete filtros y mascotas en una aplicación autónoma. |
 
 Los números de versión y permisos pertenecen a cada plataforma. Un ZIP de la extensión no instala la aplicación de escritorio. Los repositorios publican fuentes y recursos necesarios; los instaladores generados y la configuración personal quedan fuera de Git.
 
-## Catálogo para paridad nativa (17 de octubre de 2026)
+## Catálogo para paridad nativa
 
-`node tools/exportar-catalogo.cjs` genera `catalogos/nativo-v1.json` con seis idiomas, sitios, reglas ordenadas, textos comunes y 36 casos sintéticos. `--check` detecta una exportación ausente o desactualizada. Desde Base, `node tests/catalogo.test.cjs` comprueba ambas ediciones, las variables de traducción, el transporte de regex y los casos. Detalles y límites en `catalogos/README.md`.
-
-No se modificó el comportamiento de la extensión ni sus permisos. El catálogo todavía no está integrado en las apps nativas; exportarlo no acredita reconocimiento en seis idiomas, pruebas acústicas ni paridad de cámara. Regresiones locales: voz 14 grupos y motores 70 grupos aprobados; no se ejecutó navegador por la restricción del titular.
+`catalogos/nativo-v1.json` (ver [catalogos/README.md](catalogos/README.md)) exporta seis idiomas, sitios, reglas ordenadas, textos comunes y 36 casos sintéticos para apps nativas. Ningún consumidor nativo lo integra todavía: exportarlo no acredita reconocimiento en seis idiomas ni paridad de cámara.
