@@ -17,9 +17,6 @@ function mostrarIdioma(idioma) {
     const opcion = [...selectIdiomaVoz.options].find(elemento => elemento.value === detectado);
     selectIdiomaVoz.options[0].textContent = TextosAdapta.t("popup.automatico", { idioma: opcion?.textContent || detectado });
 }
-function actualizarVoz() {
-    ponerTexto(document.getElementById("estadoVoz"), checkVoz.checked ? "popup.activado" : "popup.desactivado");
-}
 
 function actualizarFiltro() {
     const opcion = selectDaltonismo.selectedOptions[0];
@@ -32,13 +29,12 @@ function actualizarFiltro() {
 }
 document.getElementById("quitarDaltonismo").addEventListener("click", async () => {
     selectDaltonismo.value = "ninguno";
-    await guardarYNotificar();
+    await guardarYNotificar({ daltonismo: "ninguno" });
     selectDaltonismo.focus();
 });
 chrome.storage.onChanged.addListener((cambios, area) => {
     if (area === "local" && cambios.voz) {
         checkVoz.checked = Boolean(cambios.voz.newValue);
-        actualizarVoz();
     }
     if (area === "local" && cambios.idiomaVoz) mostrarIdioma(cambios.idiomaVoz.newValue);
     if (area === "local" && cambios.daltonismo) {
@@ -86,7 +82,6 @@ async function inicializar() {
         checkVoz.checked = res.voz || false;
         mostrarIdioma(res.idiomaVoz);
         selectDaltonismo.value = res.daltonismo || "ninguno";
-        actualizarVoz();
         actualizarFiltro();
         mostrarEstadoPanel("popup.guardadoAuto");
     });
@@ -100,16 +95,12 @@ async function inicializar() {
 }
 
 // Guardar cambios y avisar a todas las pestañas abiertas
-async function guardarYNotificar() {
+async function guardarYNotificar(cambio) {
     actualizarFiltro();
-    actualizarVoz();
     mostrarEstadoPanel("popup.guardando");
     try {
-        await chrome.storage.local.set({
-            voz: checkVoz.checked,
-            idiomaVoz: selectIdiomaVoz.value,
-            daltonismo: selectDaltonismo.value
-        });
+        // Sólo la clave que cambió: no pisa cambios hechos por voz con el panel abierto.
+        await chrome.storage.local.set(cambio);
         mostrarEstadoPanel("popup.guardados");
         const tabs = await chrome.tabs.query({}).catch(() => []);
         for (const tab of tabs) {
@@ -123,9 +114,9 @@ async function guardarYNotificar() {
 }
 
 // Event Listeners
-checkVoz.addEventListener("change", guardarYNotificar);
-selectIdiomaVoz.addEventListener("change", guardarYNotificar);
-selectDaltonismo.addEventListener("change", guardarYNotificar);
+checkVoz.addEventListener("change", () => guardarYNotificar({ voz: checkVoz.checked }));
+selectIdiomaVoz.addEventListener("change", () => guardarYNotificar({ idiomaVoz: selectIdiomaVoz.value }));
+selectDaltonismo.addEventListener("change", () => guardarYNotificar({ daltonismo: selectDaltonismo.value }));
 
 // Arrancar popup
 inicializar();

@@ -27,3 +27,7 @@ Actualizar README al cambiar funciones, comandos o permisos. Mantener AGENTS.md 
 ### Reutilización en Windows y macOS
 
 Al trasladar estas mejoras a apps nativas, usar las preferencias de idioma de la plataforma y una elección manual persistente, compartir catálogos de textos/comandos, y mantener nombres y texto dictado intactos. Separar estado semántico de su texto traducido evita romper mascotas e indicadores. Conservar límites Base/Lite y probar cambio en vivo, persistencia, permisos y recuperación; no copiar `chrome.*` a código nativo. Estas extensiones no actualizan ni validan los proyectos Windows/macOS.
+
+### Catálogo nativo versionado
+
+`tools/exportar-catalogo.cjs` genera `catalogos/nativo-v1.json` desde sitios.js, VoiceAssistant, textos_paginas.js, Mascota y tests/fixtures/voz-paridad.json. Ejecutar el generador y `--check` en Base y Lite al cambiar esas fuentes; desde Base ejecutar `node tests/catalogo.test.cjs`. Conservar el orden de reglas, placeholders, autoría y licencia. El script y los casos son iguales en ambas ediciones. Ningún consumidor nativo está integrado todavía; no confundir exportación de datos con función disponible, ni añadir cámara/TalkBack a Lite por aparecer en una ayuda común.
